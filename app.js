@@ -23,6 +23,10 @@ const connectDB = async () => {
 
 connectDB()
 
+app.get(("/") , () => {
+    res.json("Backend is live")
+})
+
 
 app.post("/register" , async (req,res) => {
     const {userName, email, password} = req.body;
