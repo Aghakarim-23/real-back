@@ -23,12 +23,12 @@ const connectDB = async () => {
 
 connectDB()
 
-app.get(("/") , () => {
-    res.json("Backend is live")
+app.get(("/") , (req,res) => {
+    res.send("Backend is live")
 })
 
 
-app.post("https://real-back-jkxe.onrender.com/register" , async (req,res) => {
+app.post("/register" , async (req,res) => {
     const {userName, email, password} = req.body;
 
     try {
@@ -46,7 +46,7 @@ app.post("https://real-back-jkxe.onrender.com/register" , async (req,res) => {
     }
 })
 
-app.post("https://real-back-jkxe.onrender.com/login" , async (req,res) => {
+app.post("/login" , async (req,res) => {
     const {email, password} = req.body
 
     const existingUser = await User.findOne({email})
