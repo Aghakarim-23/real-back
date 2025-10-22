@@ -4,6 +4,9 @@ const dotenv = require("dotenv")
 const mongoose = require("mongoose")
 const User = require("./models/User")
 
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+
 dotenv.config()
 
 const app = express()
@@ -32,12 +35,22 @@ app.post("/register" , async (req,res) => {
     const {userName, email, password} = req.body;
 
     try {
+
+        const hashPassword = await bcrypt.hash(password, 10)
+        console.log("Plain password:", password);
+
+         
         const newUser = await User.create({
             userName,
             email,
-            password
+            password: hashPassword
         })
-        res.status(201).json({message: "User registered successfully", user: newUser})
+
+        res.status(201).json({message: "User registered successfully", 
+            user: {
+                userName,
+                email,
+        }})
         
     } catch (error) {
         console.error(error)
