@@ -30,6 +30,19 @@ app.get(("/") , (req,res) => {
     res.send("Backend is live")
 })
 
+app.get("/users", async (req,res) => {        
+        try {
+            const users = await User.find({})
+            res.status(200).json(users)
+            console.log(users);
+            
+        } catch (error) {
+            console.error(error)
+        }
+
+
+})
+
 
 app.post("/register" , async (req,res) => {
     const {userName, email, password} = req.body;
@@ -73,13 +86,14 @@ app.post("/login" , async (req,res) => {
         if(!isMatch) {
             return res.status(400).json({message: "Password is wrong"})
         } else {
+            const token = jwt.sign(
+                {id: existingUser._id},
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+            )
 
-            return res.status(201).json({message: "Login succesfully", user: existingUser.userName})
+            return res.status(201).json({message: "Login succesfully", user: existingUser.userName, token} )
         }
-
-    
-
-  
 })
 
 
