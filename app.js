@@ -37,14 +37,13 @@ app.post("/register" , async (req,res) => {
     try {
 
         const hashPassword = await bcrypt.hash(password, 10)
-        console.log("Plain password:", password);
-
          
         const newUser = await User.create({
             userName,
             email,
             password: hashPassword
         })
+
 
         res.status(201).json({message: "User registered successfully", 
             user: {
@@ -62,17 +61,23 @@ app.post("/register" , async (req,res) => {
 app.post("/login" , async (req,res) => {
     const {email, password} = req.body
 
+    
     const existingUser = await User.findOne({email})
 
     if(!existingUser) return res.status(404).json({message: "User not found"})
 
-    if(existingUser) {
-        if(existingUser.password !== password) {
-            return res.status(400).json({message: "Password is wrong"})
-        } 
-        return res.status(201).json({message: "Login succesfully", user: existingUser.userName})
+        const isMatch = await bcrypt.compare(password, existingUser.password)
 
-    }
+        console.log(isMatch);
+    
+        if(!isMatch) {
+            return res.status(400).json({message: "Password is wrong"})
+        } else {
+
+            return res.status(201).json({message: "Login succesfully", user: existingUser.userName})
+        }
+
+    
 
   
 })
