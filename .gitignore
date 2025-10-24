@@ -1,0 +1,15 @@
+.env# Node modules
+node_modules/
+
+# Environment files
+.env
+
+# Logs
+logs/
+*.log
+
+# Build output (if using TypeScript)
+dist/
+
+# Optional OS files
+.DS_Store
